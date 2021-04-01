@@ -12,6 +12,23 @@ namespace bd
 		Store() = default;
 		virtual ~Store() = default;
 
+	};
+
+	class FStore : public Store
+	{
+	public:
+		FStore() = default;
+		virtual ~FStore() = default;
+		virtual void SetKeyValue(std::string key, std::string value) = 0;
+		virtual std::string getDirectory() = 0;
+		virtual void clear() = 0;
+	};
+
+	class MStore : public Store
+	{
+	public:
+		MStore() = default;
+		virtual ~MStore() = default;
 		virtual void SetKeyValue(std::string key, std::string value) = 0;
 		virtual std::string getKeyValue(std::string key) = 0;
 		virtual void loadKeys(const std::string& dir) = 0;
@@ -27,7 +44,7 @@ namespace bd
 		virtual void setKeyValue(std::string key, std::string value) = 0;
 		virtual std::string getKeyValue(std::string key) = 0;
 		virtual std::string getDirectory() = 0;
-		virtual void destroy() = 0;
+		virtual void destruir() = 0;
 	};
 }
 

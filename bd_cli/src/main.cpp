@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 		if (!validarNomeBD(res)) return 1;
 		std::string nomeBD(res["n"].as<std::string>());
 		unique_ptr<bd::IBD> bd(bd::PublicBD::carregar(nomeBD));
-		bd->destroy();
+		bd->destruir();
 		return 0;
 	}
 

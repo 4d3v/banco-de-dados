@@ -8,15 +8,36 @@
 
 namespace extbd
 {
-	struct Impl
+	struct MemoryImpl
 	{
 		std::unordered_map<std::string, std::string> kvStore;
 	};
 
-	class MemoryKeyValueStore : public bd::Store
+	struct FileImpl
+	{
+		std::string nomeBD;
+		std::string fullPath;
+	};
+
+	class FileKeyValueStore : public bd::FStore
 	{
 	private:
-		std::unique_ptr<Impl> pImpl;
+		std::unique_ptr<FileImpl> pFileImpl;
+
+	public:
+		FileKeyValueStore(std::string nomeBD, std::string fullPath);
+		~FileKeyValueStore();
+
+		virtual void SetKeyValue(std::string key, std::string value);
+		virtual std::string getDirectory();
+		virtual void clear();
+
+	};
+
+	class MemoryKeyValueStore : public bd::MStore
+	{
+	private:
+		std::unique_ptr<MemoryImpl> pMemoryImpl;
 
 	public:
 		MemoryKeyValueStore();
@@ -31,9 +52,8 @@ namespace extbd
 	class EmbeddedBD : public bd::IBD
 	{
 	private:
-		std::string nomeBD;
-		std::string fullPath;
-		std::unique_ptr<extbd::MemoryKeyValueStore> pMemoryStore;
+		std::unique_ptr<MemoryKeyValueStore> pMemoryStore;
+		std::unique_ptr<FileKeyValueStore> pFileStore;
 
 	public:
 		EmbeddedBD(std::string nomeBD, std::string fullPath);
@@ -45,7 +65,7 @@ namespace extbd
 		virtual void setKeyValue(std::string key, std::string value);
 		virtual std::string getKeyValue(std::string key);
 		virtual std::string getDirectory();
-		virtual void destroy();
+		virtual void destruir();
 	};
 }
 

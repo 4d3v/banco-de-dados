@@ -27,7 +27,7 @@ TEST(GerenciamentoBD, CriarBancoDeDadosVazio)
 	EXPECT_TRUE(p == end(p)); // Atualmente não há diretórios dentro de testebd
 
 	// excluindo dir depois dos testes
-	bd->destroy();
+	bd->destruir();
 	EXPECT_FALSE(fs::is_directory(fs::status(bd->getDirectory())));
 
 	/*
@@ -58,7 +58,7 @@ TEST(GerenciamentoBD, CarregarBancoDeDados)
 	const auto& p = fs::directory_iterator(bd2->getDirectory());
 	EXPECT_TRUE(p == end(p)); // Atualmente não há diretórios dentro de testebd
 
-	bd->destroy();
+	bd->destruir();
 	EXPECT_FALSE(fs::is_directory(fs::status(bd2->getDirectory())));
 }
 
@@ -87,5 +87,5 @@ TEST(GerenciamentoKeyValues, GuardarLerKeyValue)
 	for (const auto& entry : fs::directory_iterator(bd->getDirectory()))
 		fs::remove_all(entry.path());
 
-	bd->destroy();
+	bd->destruir();
 }

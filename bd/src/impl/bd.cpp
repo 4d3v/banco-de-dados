@@ -2,7 +2,8 @@
 namespace fs = std::filesystem;
 
 extbd::EmbeddedBD::EmbeddedBD(std::string nomeBD, std::string fullPath)
-	: nomeBD{ nomeBD }, fullPath{ fullPath }, pMemoryStore{ std::make_unique<MemoryKeyValueStore>() }
+	: pFileStore{ std::make_unique<FileKeyValueStore>(nomeBD, fullPath) },
+	pMemoryStore{ std::make_unique<MemoryKeyValueStore>() }
 {
 	pMemoryStore->loadKeys(fullPath);
 }
@@ -29,11 +30,7 @@ const std::unique_ptr<bd::IBD> extbd::EmbeddedBD::carregar(std::string nomeBD)
 
 void extbd::EmbeddedBD::setKeyValue(std::string key, std::string value)
 {
-	std::ofstream outFile{ fullPath + "/" + key + "_str.kv",
-		std::ios::out | std::ios::trunc };
-	if (outFile) outFile << value;
-	outFile.close();
-
+	pFileStore->SetKeyValue(key, value);
 	pMemoryStore->SetKeyValue(key, value);
 }
 
@@ -44,15 +41,11 @@ std::string extbd::EmbeddedBD::getKeyValue(std::string key)
 
 std::string extbd::EmbeddedBD::getDirectory()
 {
-	return fullPath;
+	return pFileStore->getDirectory();
 }
 
-void extbd::EmbeddedBD::destroy()
+void extbd::EmbeddedBD::destruir()
 {
-	// Removendo todos registros antes de deletar banco de dados
-	for (const auto& entry : fs::directory_iterator(getDirectory()))
-		fs::remove_all(entry.path());
-	fs::remove(fullPath);
-
+	pFileStore->clear();
 	pMemoryStore->clear();
 }

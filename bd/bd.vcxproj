@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\impl\bd.cpp" />
+    <ClCompile Include="src\impl\filekeyvaluestore.cpp" />
     <ClCompile Include="src\impl\memorykeyvaluestore.cpp" />
     <ClCompile Include="src\impl\publicbd.cpp" />
   </ItemGroup>

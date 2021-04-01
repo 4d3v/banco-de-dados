@@ -1,20 +1,23 @@
 #include "../includes/extensions/extbd.h"
 namespace fs = std::filesystem;
 
-extbd::MemoryKeyValueStore::MemoryKeyValueStore() { pImpl = std::make_unique<Impl>(); }
+extbd::MemoryKeyValueStore::MemoryKeyValueStore()
+{
+	pMemoryImpl = std::make_unique<MemoryImpl>();
+}
 
 extbd::MemoryKeyValueStore::~MemoryKeyValueStore() {}
 
 void extbd::MemoryKeyValueStore::SetKeyValue(std::string key, std::string value)
 {
-	//pImpl->kvStore[key] = value;
-	pImpl->kvStore.insert({ key,value });
+	//pMemoryImpl->kvStore[key] = value;
+	pMemoryImpl->kvStore.insert({ key,value });
 }
 
 std::string extbd::MemoryKeyValueStore::getKeyValue(std::string key)
 {
-	std::unordered_map<std::string, std::string>::const_iterator x = pImpl->kvStore.find(key);
-	if (x == pImpl->kvStore.end()) return "Not found"; // TODO Melhorar => error handling
+	std::unordered_map<std::string, std::string>::const_iterator x = pMemoryImpl->kvStore.find(key);
+	if (x == pMemoryImpl->kvStore.end()) return "Not found"; // TODO Melhorar => error handling
 	return x->second;
 }
 
@@ -40,16 +43,16 @@ void extbd::MemoryKeyValueStore::loadKeys(const std::string& dir)
 				value.assign(std::istreambuf_iterator<char>(inFile),
 					std::istreambuf_iterator<char>());
 
-				pImpl->kvStore.insert({ key, value });
+				pMemoryImpl->kvStore.insert({ key, value });
 			}
 		}
 	}
 
 	// Debug
-	//for (auto const& x : pImpl->kvStore) std::cout << x.first << ": " << x.second << std::endl;
+	//for (auto const& x : pMemoryImpl->kvStore) std::cout << x.first << ": " << x.second << std::endl;
 }
 
 void extbd::MemoryKeyValueStore::clear()
 {
-	pImpl->kvStore.clear();
+	pMemoryImpl->kvStore.clear();
 }
